@@ -33,11 +33,18 @@ class Post extends BaseController
         ];
 
         $rules = [
-            'message' => 'required|max_length[30]|'
+            'message' => 'required|max_length[30]'
         ];
 
         if ($this->request->is('post') && $this->validateData($data, $rules) == false) {
-            return redirect()->back();
+            // model()ヘルパーを使ってモデルクラスを読み込む
+            $postModel = model(Posts::class);
+
+            // 投稿を取得する
+            $posts = $postModel->asObject()->findAll();
+
+            // ビューを表示
+            return view('post_view', ['posts' => $posts]);
         }
 
         // model()ヘルパーを使ってモデルクラスを読み込む
